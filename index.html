@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .question {
+            margin: 20px 0;
+            font-size: 18px;
+        }
+
+        .answer-input {
+            width: 80%;
+            padding: 10px;
+            margin-top: 5px;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button a {
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Пройди тест</h2>
+    <div id="quiz"></div>
+    <button onclick="submitQuiz()">Проверить ответы</button>
+    <p id="result"></p>
+    <button><a href="teoria.html">Ознакомиться</a></button>
+
+    <script>
+        const quizData = [
+            {
+                question: "01",
+                correct: "Основные средства"
+            },
+            {
+                question: "02",
+                correct: "Амортизация основных средств"
+            },
+            {
+                question: "04",
+                correct: "Нематериальные активы"
+            },
+            {
+                question: "05",
+                correct: "Амортизация нематериальных активов"
+            },
+            {
+                question: "07",
+                correct: "Оборудование к установке и строительные материалы"
+            },
+            {
+                question: "08",
+                correct: "Вложения в долгосрочные активы"
+            },
+            {
+                question: "10",
+                correct: "Материалы"
+            },
+            {
+                question: "11",
+                correct: "Животные на выращивании и откорме"
+            },
+            {
+                question: "15",
+                correct: "Заготовление и приобретение материалов"
+            },
+            {
+                question: "16",
+                correct: "Отклонение в стоимости материалов"
+            },
+            {
+                question: "18",
+                correct: "Налог на добавленную стоимость по приобретенным товарам, работам, услугам"
+            },
+            {
+                question: "20",
+                correct: "Основное производство"
+            },
+            {
+                question: "23",
+                correct: "Вспомогательные производства"
+            },
+            {
+                question: "25",
+                correct: "Общепроизводственные затраты"
+            },
+            {
+                question: "26",
+                correct: "Общехозяйственные затраты"
+            },
+            {
+                question: "28",
+                correct: "Брак в производстве"
+            },
+            {
+                question: "41",
+                correct: "Товары"
+            },
+            {
+                question: "43",
+                correct: "Готовая продукция"
+            },
+            {
+                question: "44",
+                correct: "Расходы на реализацию"
+            },
+            {
+                question: "50",
+                correct: "Касса"
+            },
+            {
+                question: "51",
+                correct: "Расчетные счета"
+            },
+            {
+                question: "52",
+                correct: "Валютные счета"
+            },
+            {
+                question: "55",
+                correct: "Специальные счета в банках"
+            },
+            {
+                question: "60",
+                correct: "Расчеты с поставщиками и подрядчиками"
+            },
+            {
+                question: "62",
+                correct: "Расчеты с покупателями и заказчиками"
+            },
+            {
+                question: "66",
+                correct: "Расчеты по краткосрочным кредитам и займам"
+            },
+            {
+                question: "67",
+                correct: "Расчеты по долгосрочным кредитам и займам"
+            },
+            {
+                question: "68",
+                correct: "Расчеты по налогам и сборам"
+            },
+            {
+                question: "69",
+                correct: "Расчеты по социальному страхованию и обеспечению"
+            },
+            {
+                question: "70",
+                correct: "Расчеты с персоналом по оплате труда"
+            },
+            {
+                question: "71",
+                correct: "Расчеты с подотчетными лицами"
+            },
+            {
+                question: "73.2",
+                correct: "Расчеты по возмещению ущерба"
+            },
+            {
+                question: "75",
+                correct: "Расчеты с учредителями"
+            },
+            {
+                question: "76",
+                correct: "Расчеты с разными дебиторами и кредиторами"
+            },
+            {
+                question: "80",
+                correct: "Уставный капитал"
+            },
+            {
+                question: "90",
+                correct: "Доходы и расходы по текущей деятельности"
+            },
+            {
+                question: "91",
+                correct: "Прочие доходы и расходы"
+            },
+            {
+                question: "94",
+                correct: "Недостачи и потери от порчи имущества"
+            },
+            {
+                question: "99",
+                correct: "Прибыли и убытки"
+            }
+        ];
+
+        const quizContainer = document.getElementById("quiz");
+
+        function loadQuiz() {
+            quizData.forEach((q, index) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.classList.add("question");
+                questionDiv.innerHTML = `<p>${index + 1}. ${q.question}</p>`;
+
+                const input = document.createElement("input");
+                input.type = "text";
+                input.classList.add("answer-input");
+                input.dataset.index = index; // Сохраняем индекс вопроса
+
+                questionDiv.appendChild(input);
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            const inputs = document.querySelectorAll(".answer-input");
+
+            inputs.forEach(input => {
+                const index = input.dataset.index;
+                const userAnswer = input.value.trim().toLowerCase(); // Приводим к нижнему регистру
+                const correctAnswer = quizData[index].correct.toLowerCase();
+
+                if (userAnswer === correctAnswer) {
+                    score++;
+                }
+            });
+
+            document.getElementById("result").innerText = `Вы набрали: ${score} из ${quizData.length}`;
+        }
+
+        loadQuiz();
+    </script>
+
+</body>
+
+</html>
